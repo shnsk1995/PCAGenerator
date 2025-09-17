@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCAGenerator", "PCAGenerator.csproj", "{D40FCCF9-5EC9-48A6-AF3B-6D77E375E8D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D40FCCF9-5EC9-48A6-AF3B-6D77E375E8D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D40FCCF9-5EC9-48A6-AF3B-6D77E375E8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D40FCCF9-5EC9-48A6-AF3B-6D77E375E8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D40FCCF9-5EC9-48A6-AF3B-6D77E375E8D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94F06166-F19C-4D9A-AE01-0A69564357DF}
+	EndGlobalSection
+EndGlobal
