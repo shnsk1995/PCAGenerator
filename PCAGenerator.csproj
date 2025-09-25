@@ -6,6 +6,48 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+	<ApplicationIcon>Images/PCA_ICON.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Python\**" />
+    <EmbeddedResource Remove="Python\**" />
+    <None Remove="Python\**" />
+    <Page Remove="Python\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Images\pca_icon.ico" />
+    <None Remove="Images\pca_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Python.Runtime">
+      <HintPath>References\PythonRuntime\pythonnet\runtime\Python.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\pca_icon.ico" />
+    <Content Include="Images\pca_icon.png" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Python\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+
+		<Content Include="Images\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
 
 </Project>

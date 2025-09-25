@@ -5,45 +5,258 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PCAGenerator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="Generate PCA" Height="Auto" Width="Auto" Icon="pack://application:,,,/Images/PCA_ICON.ico"
         WindowStartupLocation="CenterScreen">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="LightSteelBlue" Offset="0.0"/>
+            <GradientStop Color="LightGreen" Offset="0.5"/>
+            <GradientStop Color="LightSlateGray" Offset="1.0"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid Margin="50">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Title -->
-        <TextBlock Text="PCA Plot Generator" 
+            <!-- Title -->
+            <TextBlock Text="PCA Plot Generator" 
                    FontSize="20" FontWeight="Bold" 
                    HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
-        <!-- Inputs -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Top">
-            <StackPanel Orientation="Horizontal" >
-                <Label Content="Data File:" Width="100"/>
-                <TextBox x:Name="DataFileTextBox" Width="350" IsReadOnly="True"/>
-                <Button Content="Browse" Width="80" Click="BrowseFile_Click"/>
+            <!-- Inputs -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal"  Margin="0,0,0,10">
+                    <Label Content="Data File:" Width="100"/>
+                    <TextBox x:Name="DataFileTextBox" Width="350" IsReadOnly="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Button Content="Browse" Width="80" Click="BrowseFile_Click"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"  Margin="0,0,0,10" Visibility="Collapsed">
+                    <Label Content="Output directory File:" Width="100"/>
+                    <TextBox x:Name="OutputFileTextBox" Width="350" IsReadOnly="True"/>
+                    <Button Content="Browse" Width="80" Click="OutputDirectory_Click"/>
+                </StackPanel>
+
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" >
-                <Label Content="Group Variable:" Width="100"/>
-                <TextBox x:Name="GroupVariableTextBox" Width="150" Text="Group"/>
-                <Label Content="Shape Variable:" Width="100"/>
-                <TextBox x:Name="ShapeVariableTextBox" Width="150" Text="Condition"/>
+            <StackPanel Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,0,0,0">
+
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <RadioButton x:Name="PCA_by_Group"
+                 Content="Generate PCA by Group"
+                 GroupName="GroupOptions"
+                 IsChecked="False"
+                 Margin="0,0,40,0"
+                 Checked="PCA_by_Group_Triggered"
+                 Unchecked="PCA_by_Group_Triggered"/>
+                    <RadioButton x:Name="PCA_by_GroupAndCondition"
+                 Content="Generate PCA by Group and Condition"
+                 GroupName="GroupOptions"
+                 Checked="PCA_by_GroupAndCondition_Triggered"
+                 Unchecked="PCA_by_GroupAndCondition_Triggered"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" x:Name="GroupOnly" IsEnabled="False" >
+                    <RadioButton x:Name="CategorizebyColor"
+                Content="Categorize Group by Color"
+                GroupName="CategorizationOptions"
+                IsChecked="False"
+                Checked="Category_Checked"
+                Margin="0,0,40,0"/>
+                    <RadioButton x:Name="CategorizebyShape"
+                Content="Categorize Group by Shape"
+                GroupName="CategorizationOptions"
+                Checked="Category_Checked"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10" x:Name="GroupAndCondition" IsEnabled="False">
+                    <RadioButton x:Name="CategorizebyColorAndShape"
+                Content="Categorize Group by Color and Condition by Shape"
+                GroupName="CategorizationOptions"
+                IsChecked="False"
+                Checked="Category_Checked"
+                Margin="0,0,40,0"/>
+                    <RadioButton x:Name="CategorizebyShapeAndColor"
+                Content="Categorize Group by Shape and Condition by Color"
+                GroupName="CategorizationOptions"
+                Checked="Category_Checked"/>
+                </StackPanel>
+
+
+
+
             </StackPanel>
 
-            <CheckBox x:Name="ShowSampleNamesCheckBox" 
-                      Content="Show Sample Names" 
-                      IsChecked="True"/>
-        </StackPanel>
+            <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Center" >
+                <TextBlock Text="Additional Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" 
-                    HorizontalAlignment="Center"  Margin="0,20,0,0">
-            <Button Content="Run PCA" Width="120" Click="RunPCA_Click"/>
-            <Button Content="Exit" Width="120" Click="Exit_Click"/>
-        </StackPanel>
-    </Grid>
+                    <Label Content="Plot title: " HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBox x:Name="PlotTitleTextBox" Width="200" HorizontalAlignment="Center" Margin="0,0,10,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectedText="PCA plot"/>
+                    <Label Content="Output file name: " HorizontalAlignment="Center" Margin="10,0,0,10"/>
+                    <TextBox x:Name="FileNameTextBox" Width="200" HorizontalAlignment="Center" Margin="0,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" SelectedText="PCA"/>
+                </StackPanel>
+                <TextBlock Text="Sample Name Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <CheckBox x:Name="ShowSampleNamesCheckBox" 
+                    Content="Show Sample Names" 
+                    IsChecked="False" Grid.Row="3" Margin="0,10,10,10" VerticalAlignment="Center" VerticalContentAlignment="Center" Checked="ShowSampleNamesCheckBoxTriggered" Unchecked="ShowSampleNamesCheckBoxTriggered"/>
+                    <Label Content="Sample name font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="SampleNameFontSize" Width="50"  Margin="0,10,0,10" IsEnabled="False" SelectedIndex="0">
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="9"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="11"/>
+                        <ComboBoxItem Content="12"/>
+                    </ComboBox>
+                    <Label Content="Sample name offset: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="SampleNameOffset" Width="50"  Margin="0,10,0,10" IsEnabled="False" SelectedIndex="1">
+                        <ComboBoxItem Content="(0,0)"/>
+                        <ComboBoxItem Content="(1,1)"/>
+                        <ComboBoxItem Content="(2,2)"/>
+                        <ComboBoxItem Content="(3,3)"/>
+                        <ComboBoxItem Content="(4,4)"/>
+                    </ComboBox>
+                </StackPanel>
+
+
+                <TextBlock Text="Point Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Point size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="PointSize" Width="50"  Margin="0,10,0,10" SelectedIndex="1">
+                        <ComboBoxItem Content="80"/>
+                        <ComboBoxItem Content="100"/>
+                        <ComboBoxItem Content="120"/>
+                        <ComboBoxItem Content="140"/>
+                        <ComboBoxItem Content="160"/>
+                    </ComboBox>
+                    <Label Content="Point transparency: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="PointTransparency" Width="50"  Margin="0,10,0,10" SelectedIndex="6">
+                        <ComboBoxItem Content="0.1"/>
+                        <ComboBoxItem Content="0.2"/>
+                        <ComboBoxItem Content="0.3"/>
+                        <ComboBoxItem Content="0.4"/>
+                        <ComboBoxItem Content="0.5"/>
+                        <ComboBoxItem Content="0.6"/>
+                        <ComboBoxItem Content="0.7"/>
+                        <ComboBoxItem Content="0.8"/>
+                        <ComboBoxItem Content="0.9"/>
+                        <ComboBoxItem Content="1.0"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <TextBlock Text="Label Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Title font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="TitleFontSize" Width="50"  Margin="0,10,0,10" SelectedIndex="3">
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                        <ComboBoxItem Content="18"/>
+                        <ComboBoxItem Content="20"/>
+                    </ComboBox>
+                    <Label Content="Axis title font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="AxisTitleFontSize" Width="50"  Margin="0,10,0,10" SelectedIndex="3">
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                    <Label Content="Axis label font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="AxisLabelFontSize" Width="50"  Margin="0,10,0,10" SelectedIndex="2" >
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                    <Label Content="Legend title font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="LegendTitleFontSize" Width="50"  Margin="0,10,0,10" SelectedIndex="3">
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                    <Label Content="Legend font size: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="LegendFontSize" Width="50"  Margin="0,10,0,10" SelectedIndex="2" >
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <TextBlock Text="Grid Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <CheckBox x:Name="ShowGridCheckBox" 
+                Content="Show Grid" 
+                IsChecked="False" Grid.Row="3" Margin="0,10,10,10" VerticalAlignment="Center" VerticalContentAlignment="Center" Checked="ShowGridCheckBoxTriggered" Unchecked="ShowGridCheckBoxTriggered"/>
+                    <Label Content="Grid style: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="GridStyle" Width="50"  Margin="0,10,0,10" IsEnabled="False" SelectedIndex="1">
+                        <ComboBoxItem Content=":"/>
+                        <ComboBoxItem Content="-"/>
+                    </ComboBox>
+                    <Label Content="Grid transparency: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="GridTransparency" Width="50"  Margin="0,10,0,10" IsEnabled="False" SelectedIndex="2">
+                        <ComboBoxItem Content="0.1"/>
+                        <ComboBoxItem Content="0.2"/>
+                        <ComboBoxItem Content="0.3"/>
+                        <ComboBoxItem Content="0.4"/>
+                        <ComboBoxItem Content="0.5"/>
+                        <ComboBoxItem Content="0.6"/>
+                        <ComboBoxItem Content="0.7"/>
+                        <ComboBoxItem Content="0.8"/>
+                        <ComboBoxItem Content="0.9"/>
+                        <ComboBoxItem Content="1.0"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <TextBlock Text="Plot Options" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Plot width: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="PlotWidth" Width="50"  Margin="0,10,0,10" SelectedIndex="1" >
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                    <Label Content="Plot height: " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="PlotHeight" Width="50"  Margin="0,10,0,10"  SelectedIndex="0">
+                        <ComboBoxItem Content="8"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="12"/>
+                        <ComboBoxItem Content="14"/>
+                        <ComboBoxItem Content="16"/>
+                    </ComboBox>
+                    <Label Content="Dpi (quality): " Margin="10,10,0,10"/>
+                    <ComboBox x:Name="DPI" Width="50"  Margin="0,10,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="300"/>
+                        <ComboBoxItem Content="600"/>
+                    </ComboBox>
+
+                </StackPanel>
+
+            </StackPanel>
+
+
+
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" 
+                    HorizontalAlignment="Center"  Margin="0,0,0,0">
+                <Button Content="Run PCA" Width="120" Click="RunPCA_Click" Margin="0,0,20,0"/>
+                <Button Content="Exit" Width="120" Click="Exit_Click"/>
+            </StackPanel>
+        </Grid>
 </Window>
