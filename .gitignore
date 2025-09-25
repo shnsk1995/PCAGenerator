@@ -363,5 +363,18 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Python
-/Python
+/Python/_pycache__/
+/Python/DLLs/
+/Python/Lib/
+/Python/Scripts/
+/Python/tcl/
+/Python/LICENSE.txt
+/Python/NEWS.txt
+/Python/python.exe
+/Python/pythonw.exe
+/Python/python3.dll
+/Python/python312.dll
+/Python/vcruntime140.dll
+/Python/vcruntime140_1.dll
+/Python/Doc/
 /References
