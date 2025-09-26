@@ -7,19 +7,19 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 ## 📋 Table of Contents
 
-- [Features](#features)  
-- [Requirements](#requirements)  
-- [Installation / Setup](#installation--setup)  
-- [Usage](#usage)  
+- [Features](#-features)  
+- [Requirements](#-requirements)  
+- [Installation / Setup](#-installation--setup)  
+- [Usage](#-usage)  
   - Run PCA  
   - Regenerate / Exclude Samples  
   - Zoom & Pan Plot  
-- [Customization & Settings](#customization--settings)  
-- [License](#license)  
-- [Screenshots](#screenshots)
+- [Customization & Settings](#-customization--settings)  
+- [License](#-license)  
+- [Screenshots](#-screenshots)
 
 ---
-#features
+
 ## 🚀 Features
 
 - Accepts input data in CSV format with metadata rows 
