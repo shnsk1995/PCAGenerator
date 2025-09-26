@@ -15,8 +15,6 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
   - Regenerate / Exclude Samples  
   - Zoom & Pan Plot  
 - [Customization & Settings](#customization--settings)  
-- [Project Structure](#project-structure)  
-- [Contributing](#contributing)  
 - [License](#license)  
 - [Screenshots](#screenshots)
 
@@ -99,5 +97,18 @@ These map to arguments passed to the Python `pca_plot` function in the backend.
 
 ---
 
-## 🗂 Project Structure
+## 📄 License
 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+
+## 📸 Screenshots
+### Main Window
+
+![Main Window](Images/main_window.png)
+
+### PCA Plot Window
+
+![PCA Plot Window](Images/pca_plot_window.png)
