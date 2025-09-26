@@ -9,7 +9,7 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 - [Features](#-features)  
 - [Requirements](#-requirements)  
-- [Installation / Setup](#-installation--setup)  
+- [Installation / Setup](#-installation--setup-for-users)  
 - [Usage](#-usage)  
   - Run PCA  
   - Regenerate / Exclude Samples  
