@@ -67,6 +67,7 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 - Modify any customization parameters as desired.
 - Click **Run PCA**.
 - Optionally exclude certain samples after the initial PCA run (via dropdown).
+- Try with the sample data provided in `SampleData/` folder.
 
 ### Regenerate / Exclude Samples
 
