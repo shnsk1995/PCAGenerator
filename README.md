@@ -7,7 +7,7 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 ## 📋 Table of Contents
 
-- [Features](#features)  
+- [Features](## 🚀 Features)  
 - [Requirements](#requirements)  
 - [Installation / Setup](#installation--setup)  
 - [Usage](#usage)  
@@ -101,7 +101,7 @@ These map to arguments passed to the Python `pca_plot` function in the backend.
 
 ## 📄 License
 
-This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License.
 
 ---
 
