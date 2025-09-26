@@ -105,7 +105,10 @@ namespace PCAGenerator
 
         private void Regenerate_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            
+            this.Cursor = Cursors.Wait;
+            this.IsEnabled = false;
+
             pCA.ExcludingSamples = ValuesListBox.SelectedItems.Cast<string>().ToList();
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string pythonDir = System.IO.Path.Combine(baseDir, "Python");
@@ -171,6 +174,8 @@ namespace PCAGenerator
                     samples = new List<string>();
                     foreach (var s in result[2])
                         samples.Add(s.ToString());
+
+                    this.Close();
 
                     PCAWindow pcaWindow = new PCAWindow(outputDir, pCA, samples);
                     pcaWindow.Show();

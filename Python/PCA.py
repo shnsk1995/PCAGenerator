@@ -2,6 +2,7 @@
 
 
 import os
+import datetime
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -197,14 +198,13 @@ def pca_plot(
 
     plt.tight_layout()
 
-    png_path = os.path.join(save_dir, f"{file_name}.png")
-    pdf_path = os.path.join(save_dir, f"{file_name}.pdf")
-    csv_path = os.path.join(save_dir, f"{file_name}.csv")
+    # --- Build timestamp ---
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    # --- Delete old files if they exist ---
-    for f in [png_path, pdf_path, csv_path]:
-        if os.path.exists(f):
-            os.remove(f)
+    # --- Add timestamp to file names ---
+    png_path = os.path.join(save_dir, f"{file_name}_{timestamp}.png")
+    pdf_path = os.path.join(save_dir, f"{file_name}_{timestamp}.pdf")
+    csv_path = os.path.join(save_dir, f"{file_name}_{timestamp}.csv")
 
     # --- Save new outputs ---
     plt.savefig(png_path, format="png", bbox_inches="tight")

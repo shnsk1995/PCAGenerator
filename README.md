@@ -22,19 +22,20 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 ## 🚀 Features
 
-- Accepts input data in CSV or Excel format with metadata rows  
+- Accepts input data in CSV format with metadata rows 
 - Optionally **exclude** specified samples prior to PCA  
 - Visualize PCA with points colored or shaped by group / condition  
 - Display sample names on plot  
 - Zoom / pan interactive plot window  
 - Regenerate PCA runs with updated settings  
-- Packaging includes a Python runtime so users don’t need to install Python
+- Packaging includes a .NET and Python runtime so users don’t need to install Python or .NET runtimes separately
 
 ---
 
 ## 🛠 Requirements
 
-- .NET (for WPF) — version matching project target (e.g. .NET 8)  
+- .NET (for WPF) — version matching project target (e.g. .NET 8) 
+- Application is built as a self contained executable, so users do not need to install .NET separately
 - Embedded Python runtime (shipped within the `Python/` folder)  
 - Python dependencies (via `site-packages`) for the PCA script (e.g. `numpy`, `pandas`, `scikit-learn`, `seaborn`, `matplotlib`)  
 - For development: Visual Studio (or other C# IDE) + Python development tools  
@@ -43,8 +44,8 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 ## 📦 Installation / Setup (for Users)
 
-1. Download or clone the repository.  
-2. Publish or build the release version (or use the prebuilt ZIP / release).  
+1. Download the prebuilt latest ZIP / release.
+2. Extract the ZIP to a desired location.
 3. Ensure the `Python/` and `Images/` folders accompany the executable in the same directory.  
 4. Run `PCAGenerator.exe`.  
 5. Provide an input file, configure settings, and press “Run PCA”.
@@ -55,7 +56,7 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 ### Run PCA
 
-- Load an input file (CSV/Excel) that follows the required format:  
+- Load an input file (CSV) that follows the required format:  
   - Row 1: Sample IDs  
   - Row 2: Group names  
   - (Optional) Row 3: Condition names  
@@ -63,8 +64,9 @@ Supports grouping, optional exclusion of samples, customizable plotting, and int
 
 - Choose whether to *Generate PCA by Group* or *by Group + Condition*.  
 - Select categorization options (color, shape) depending on mode.  
-- Optionally exclude certain samples (via dropdown).  
+- Modify any customization parameters as desired.
 - Click **Run PCA**.
+- Optionally exclude certain samples after the initial PCA run (via dropdown).
 
 ### Regenerate / Exclude Samples
 
@@ -99,7 +101,7 @@ These map to arguments passed to the Python `pca_plot` function in the backend.
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.
 
 ---
 

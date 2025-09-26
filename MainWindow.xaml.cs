@@ -22,6 +22,10 @@ namespace PCAGenerator;
 /// </summary>
 public partial class MainWindow : Window
 {
+
+    private PCA pCA;
+    private string outputDir;
+    private List<string> samples;
     public MainWindow()
     {
         InitializeComponent();
@@ -50,8 +54,10 @@ public partial class MainWindow : Window
         
     }
 
-    private void RunPCA_Click(object sender, RoutedEventArgs e)
+    private async void RunPCA_Click(object sender, RoutedEventArgs e)
     {
+
+
 
         /*[System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true)]
         static extern bool SetDllDirectory(string lpPathName);
@@ -157,13 +163,228 @@ public partial class MainWindow : Window
         }
         */
 
-        if (string.IsNullOrWhiteSpace(DataFileTextBox.Text) || !File.Exists(DataFileTextBox.Text))
+        try
         {
-            MessageBox.Show("Please select a valid input file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return;
+            if (string.IsNullOrWhiteSpace(DataFileTextBox.Text) || !File.Exists(DataFileTextBox.Text))
+            {
+                MessageBox.Show("Please select a valid input file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(FileNameTextBox.Text))
+            {
+                MessageBox.Show("Please enter an output file name.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PlotTitleTextBox.Text))
+            {
+                MessageBox.Show("Please enter a plot title.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.Equals(
+                    System.IO.Path.GetFileNameWithoutExtension(DataFileTextBox.Text),
+                    FileNameTextBox.Text,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Input and output file cannot be the same. Please enter a different output file name.",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // Disable entire window
+            this.IsEnabled = false;
+
+            // (Optional) Change cursor
+            Mouse.OverrideCursor = Cursors.Wait;
+
+            pCA = new PCA();
+
+            pCA.InputFile = DataFileTextBox.Text;
+
+            if (PCA_by_Group.IsChecked == true)
+            {
+                if (CategorizebyColor.IsChecked == true)
+                {
+                    pCA.ColorVar = "Group";
+                    pCA.ShapeVar = null;
+                }
+                else if (CategorizebyShape.IsChecked == true)
+                {
+                    pCA.ColorVar = null;
+                    pCA.ShapeVar = "Group";
+                }
+            }
+            else if (PCA_by_GroupAndCondition.IsChecked == true)
+            {
+                if (CategorizebyColorAndShape.IsChecked == true)
+                {
+                    pCA.ColorVar = "Group";
+                    pCA.ShapeVar = "Condition";
+                }
+                else if (CategorizebyShapeAndColor.IsChecked == true)
+                {
+                    pCA.ColorVar = "Condition";
+                    pCA.ShapeVar = "Group";
+                }
+            }
+
+            pCA.ShowNames = ShowSampleNamesCheckBox.IsChecked ?? false;
+            pCA.PlotTitle = PlotTitleTextBox.Text;
+            pCA.FileName = FileNameTextBox.Text;
+
+            pCA.SampleNameFontSize = int.Parse(((ComboBoxItem)SampleNameFontSize.SelectedItem).Content.ToString());
+            string sampleNameOffset = (SampleNameOffset.SelectedItem as ComboBoxItem).Content.ToString();
+            string[] parts = sampleNameOffset.Trim('(', ')').Split(',');
+            pCA.Offset = parts.Select(int.Parse).ToArray();
+
+            pCA.PointSize = int.Parse(((ComboBoxItem)PointSize.SelectedItem).Content.ToString());
+            pCA.PointTransparency = float.Parse(((ComboBoxItem)PointTransparency.SelectedItem).Content.ToString(), System.Globalization.CultureInfo.InvariantCulture);
+
+            pCA.TitleFontSize = int.Parse(((ComboBoxItem)TitleFontSize.SelectedItem).Content.ToString());
+            pCA.AxisTitleFontSize = int.Parse(((ComboBoxItem)AxisTitleFontSize.SelectedItem).Content.ToString());
+            pCA.AxisLabelFontSize = int.Parse(((ComboBoxItem)AxisLabelFontSize.SelectedItem).Content.ToString());
+            pCA.LegendTitleFontSize = int.Parse(((ComboBoxItem)LegendTitleFontSize.SelectedItem).Content.ToString());
+            pCA.LegendFontSize = int.Parse(((ComboBoxItem)LegendFontSize.SelectedItem).Content.ToString());
+
+            pCA.ShowGrid = ShowGridCheckBox.IsChecked ?? false;
+            pCA.GridStyle = (GridStyle.SelectedItem as ComboBoxItem).Content.ToString();
+            pCA.GridTransparency = float.Parse(((ComboBoxItem)GridTransparency.SelectedItem).Content.ToString(), System.Globalization.CultureInfo.InvariantCulture);
+
+            pCA.PlotWidth = int.Parse(((ComboBoxItem)PlotWidth.SelectedItem).Content.ToString());
+            pCA.PlotHeight = int.Parse(((ComboBoxItem)PlotHeight.SelectedItem).Content.ToString());
+            pCA.Dpi = int.Parse(((ComboBoxItem)DPI.SelectedItem).Content.ToString());
+
+
+            // Run your long task asynchronously
+            await Task.Run(() =>
+            {
+                
+
+
+                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string pythonDir = System.IO.Path.Combine(baseDir, "Python");
+
+                try
+                {
+                    // Tell pythonnet where Python is
+                    Runtime.PythonDLL = System.IO.Path.Combine(pythonDir, "python312.dll");
+                    PythonEngine.PythonHome = pythonDir;
+                    PythonEngine.PythonPath = string.Join(";", new[] {
+                pythonDir,
+                System.IO.Path.Combine(pythonDir, "Lib"),
+                System.IO.Path.Combine(pythonDir, "Lib", "site-packages"),
+                System.IO.Path.Combine(pythonDir, "DLLs")
+            });
+
+                    PythonEngine.Initialize();
+
+                    Console.WriteLine("Looking for Python at: " + Runtime.PythonDLL);
+                    Console.WriteLine("PythonHome: " + PythonEngine.PythonHome);
+                    Console.WriteLine("PythonPath: " + PythonEngine.PythonPath);
+
+                    using (Py.GIL())
+                    {
+                        dynamic sys = Py.Import("sys");
+
+                        // Add custom script folder
+                        string scriptPath = System.IO.Path.Combine(baseDir, "Python");
+                        sys.path.append(scriptPath);
+
+
+                        // Import and run your PCA script
+                        dynamic pcaScript = Py.Import("PCA");
+                        var result = pcaScript.pca_plot(
+                            pCA.InputFile,
+                            pCA.ColorVar,
+                            pCA.ShapeVar,
+                            pCA.ShowNames,
+                            pCA.PlotTitle,
+                            pCA.FileName,
+                            pCA.SampleNameFontSize,
+                            pCA.Offset,
+                            pCA.PointTransparency,
+                            pCA.PointSize,
+                            pCA.TitleFontSize,
+                            pCA.AxisTitleFontSize,
+                            pCA.AxisLabelFontSize,
+                            pCA.LegendTitleFontSize,
+                            pCA.LegendFontSize,
+                            pCA.PlotWidth,
+                            pCA.PlotHeight,
+                            pCA.Dpi,
+                            pCA.ShowGrid,
+                            pCA.GridStyle,
+                            pCA.GridTransparency,
+                            pCA.ExcludingSamples
+                            );
+
+                        outputDir = result[0].ToString();
+                        /*usedSamples = new List<string>();
+                        foreach (var s in result[1])
+                            usedSamples.Add(s.ToString());
+                        */
+                        samples = new List<string>();
+                        foreach (var s in result[2])
+                            samples.Add(s.ToString());
+
+                        // Open PCA results window (UI thread)
+                        /*Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            PCAWindow pcaWindow = new PCAWindow(outputDir, pCA, samples);
+                            pcaWindow.Show();
+                        });
+                        */
+
+
+                        /*// Open PCA results window
+                        PCAWindow pcaWindow = new PCAWindow(outputDir, pCA, samples);
+                        pcaWindow.Show();
+                        */
+                    }
+                }
+                catch (PythonException ex)
+                {
+                    HandleError("Python", ex.Message, ex.StackTrace);
+                }
+                catch (Exception ex)
+                {
+                    HandleError(".NET", ex.Message, ex.StackTrace);
+                }
+                finally
+                {
+                    if (PythonEngine.IsInitialized)
+                        PythonEngine.Shutdown();
+
+                    
+                }
+
+            });
+
+            PCAWindow pcaWindow = new PCAWindow(outputDir, pCA, samples);
+            pcaWindow.Show();
+
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
+        finally
+        {
+
+
+            // Re-enable window
+            this.IsEnabled = true;
+
+            // Restore cursor
+            Mouse.OverrideCursor = null;
+
         }
 
-        PCA pCA = new PCA();
+        
+
+        /* PCA pCA = new PCA();
 
         pCA.InputFile = DataFileTextBox.Text;
 
@@ -304,7 +525,7 @@ public partial class MainWindow : Window
                 if (PythonEngine.IsInitialized)
                     PythonEngine.Shutdown();
             }
-
+        */
 
     }
 
